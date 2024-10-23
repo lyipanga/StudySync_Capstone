@@ -1,13 +1,15 @@
-"use client";
+"use client";  // Ensure this is at the top
+
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";  // Updated import
 
 export default function Navbar() {
-  // State to manage mobile menu visibility
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();  // Make sure it's from 'next/navigation'
 
   const toggleMenu = () => {
-    setIsOpen(!isOpen); // Toggle the menu visibility
+    setIsOpen(!isOpen);
   };
 
   return (
@@ -29,42 +31,22 @@ export default function Navbar() {
           <Link href="/notes" className="text-gray-600 hover:text-blue-500">
             My Notes
           </Link>
-          <Link
-            href="/flashcards"
-            className="text-gray-600 hover:text-blue-500"
-          >
+          <Link href="/flashcards" className="text-gray-600 hover:text-blue-500">
             Flashcards
           </Link>
           <Link href="/profile" className="text-gray-600 hover:text-blue-500">
             Profile
           </Link>
-          <Link
-            href="/login"
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-          >
+          <Link href="/login" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
             Login
           </Link>
         </div>
 
         {/* Mobile Menu Icon */}
         <div className="md:hidden">
-          <button
-            onClick={toggleMenu}
-            className="text-gray-600 focus:outline-none"
-          >
-            {/* Insert mobile menu icon */}
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16m-7 6h7"
-              />
+          <button onClick={toggleMenu} className="text-gray-600 focus:outline-none">
+            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
             </svg>
           </button>
         </div>
@@ -77,34 +59,19 @@ export default function Navbar() {
             <Link href="/" className="block text-gray-600 hover:text-blue-500">
               Home
             </Link>
-            <Link
-              href="/upload"
-              className="block text-gray-600 hover:text-blue-500"
-            >
+            <Link href="/upload" className="block text-gray-600 hover:text-blue-500">
               Upload Textbook
             </Link>
-            <Link
-              href="/notes"
-              className="block text-gray-600 hover:text-blue-500"
-            >
+            <Link href="/notes" className="block text-gray-600 hover:text-blue-500">
               My Notes
             </Link>
-            <Link
-              href="/flashcards"
-              className="block text-gray-600 hover:text-blue-500"
-            >
+            <Link href="/flashcards" className="block text-gray-600 hover:text-blue-500">
               Flashcards
             </Link>
-            <Link
-              href="/profile"
-              className="block text-gray-600 hover:text-blue-500"
-            >
+            <Link href="/profile" className="block text-gray-600 hover:text-blue-500">
               Profile
             </Link>
-            <Link
-              href="/login"
-              className="block bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-            >
+            <Link href="/login" className="block bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
               Login
             </Link>
           </div>
