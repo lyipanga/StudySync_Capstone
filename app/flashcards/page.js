@@ -1,43 +1,52 @@
 "use client";
 import { useState, useEffect } from "react";
 
-function Flashcard({ question, answer }) {
+function Flashcard({ question, answer, onDelete }) {
   const [flipped, setFlipped] = useState(false);
 
   const handleFlip = () => setFlipped(!flipped);
 
   return (
-    <div
-      onClick={handleFlip}
-      className="w-64 h-40 flex items-center justify-center cursor-pointer transition-transform duration-500 transform perspective"
-      style={{
-        perspective: "1000px",
-        position: "relative",
-      }}
-    >
-      {!flipped && (
-        <div
-          className="absolute w-full h-full flex items-center justify-center bg-blue-300 rounded-lg shadow-lg"
-          style={{
-            transform: "rotateY(0deg)",
-            backfaceVisibility: "hidden",
-          }}
-        >
-          <p className="text-xl text-black">{question}</p>
-        </div>
-      )}
+    <div className="mb-4">
+      <div
+        onClick={handleFlip}
+        className="w-64 h-40 flex items-center justify-center cursor-pointer transition-transform duration-500 transform perspective"
+        style={{
+          perspective: "1000px",
+          position: "relative",
+        }}
+      >
+        {!flipped && (
+          <div
+            className="absolute w-full h-full flex items-center justify-center bg-blue-300 rounded-lg shadow-lg"
+            style={{
+              transform: "rotateY(0deg)",
+              backfaceVisibility: "hidden",
+            }}
+          >
+            <p className="text-xl text-black">{question}</p>
+          </div>
+        )}
 
-      {flipped && (
-        <div
-          className="absolute w-full h-full flex items-center justify-center bg-green-300 rounded-lg shadow-lg"
-          style={{
-            transform: "rotateY(180deg)",
-            backfaceVisibility: "hidden",
-          }}
-        >
-          <p className="text-xl text-black">{answer}</p>
-        </div>
-      )}
+        {flipped && (
+          <div
+            className="absolute w-full h-full flex items-center justify-center bg-green-300 rounded-lg shadow-lg"
+            style={{
+              transform: "rotateY(180deg)",
+              backfaceVisibility: "hidden",
+            }}
+          >
+            <p className="text-xl text-black">{answer}</p>
+          </div>
+        )}
+      </div>
+
+      <button
+        onClick={onDelete}
+        className="mt-2 bg-red-500 text-white py-1 px-3 rounded-md"
+      >
+        Delete Flashcard
+      </button>
     </div>
   );
 }
@@ -60,9 +69,14 @@ export default function FlashcardPage() {
     e.preventDefault();
     if (question.trim() === "" || answer.trim() === "") return;
 
-    setFlashcards([...flashcards, { question, answer }]);
+    const newFlashcard = { question, answer };
+    const updatedFlashcards = [...flashcards, newFlashcard];
+    setFlashcards(updatedFlashcards);
     setQuestion("");
     setAnswer("");
+
+    // Update local storage with new flashcard
+    localStorage.setItem("flashcards", JSON.stringify(updatedFlashcards));
   };
 
   const saveFlashcardsToLocalStorage = () => {
@@ -71,6 +85,12 @@ export default function FlashcardPage() {
       localStorage.setItem(flashcardName, JSON.stringify(flashcards));
       alert(`Flashcards saved as "${flashcardName}"`);
     }
+  };
+
+  const handleDeleteFlashcard = (index) => {
+    const updatedFlashcards = flashcards.filter((_, i) => i !== index);
+    setFlashcards(updatedFlashcards);
+    localStorage.setItem("flashcards", JSON.stringify(updatedFlashcards));
   };
 
   const goToNext = () => {
@@ -122,6 +142,7 @@ export default function FlashcardPage() {
           <Flashcard
             question={flashcards[currentIndex].question}
             answer={flashcards[currentIndex].answer}
+            onDelete={() => handleDeleteFlashcard(currentIndex)}
           />
 
           <div className="mt-4">
@@ -144,6 +165,20 @@ export default function FlashcardPage() {
           </p>
         </div>
       )}
+
+      <div className="mt-6">
+        <h2 className="text-2xl font-semibold mb-4">All Flashcards</h2>
+        <div className="flex flex-wrap gap-4">
+          {flashcards.map((flashcard, index) => (
+            <Flashcard
+              key={index}
+              question={flashcard.question}
+              answer={flashcard.answer}
+              onDelete={() => handleDeleteFlashcard(index)}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

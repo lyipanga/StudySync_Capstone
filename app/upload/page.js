@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import axios from "axios";
 
@@ -12,6 +12,24 @@ export default function Upload() {
   const [pageNumber, setPageNumber] = useState(1);
   const [numPages, setNumPages] = useState(null);
   const [uploadStatus, setUploadStatus] = useState("");
+  const [pdfCount, setPdfCount] = useState(0);
+
+  useEffect(() => {
+    fetchPdfCount();
+  }, []);
+
+  const fetchPdfCount = async () => {
+    try {
+      const response = await axios.get("/api/upload");
+      if (response.data.success) {
+        setPdfCount(response.data.count);
+      } else {
+        console.error("Failed to retrieve file count");
+      }
+    } catch (error) {
+      console.error("Error retrieving file count:", error);
+    }
+  };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -44,6 +62,11 @@ export default function Upload() {
 
       if (response.data.success) {
         setUploadStatus("File uploaded successfully");
+        setSelectedFile(null);
+        setPreviewFile(null);
+        setPageNumber(1);
+        setNumPages(null);
+        fetchPdfCount(); // Refresh PDF count after successful upload
       } else {
         setUploadStatus("Failed to upload file");
       }
@@ -58,6 +81,12 @@ export default function Upload() {
       <h1 className="text-3xl font-bold mb-6 text-center">
         Upload Your Textbook
       </h1>
+
+      <div className="text-center mb-4">
+        <p className="text-xl">
+          Total PDFs Stored: <span className="font-bold">{pdfCount}</span>
+        </p>
+      </div>
 
       <input
         type="file"
@@ -92,7 +121,15 @@ export default function Upload() {
       </button>
 
       {uploadStatus && (
-        <div className="mt-4 text-center text-black">{uploadStatus}</div>
+        <div
+          className={`mt-4 text-center ${
+            uploadStatus.includes("successfully")
+              ? "text-green-600"
+              : "text-red-600"
+          }`}
+        >
+          {uploadStatus}
+        </div>
       )}
     </div>
   );
