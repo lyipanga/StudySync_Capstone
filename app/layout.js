@@ -1,5 +1,6 @@
 import localFont from "next/font/local";
 import "./globals.css";
+import Navbar from "../components/Navbar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -14,16 +15,19 @@ const geistMono = localFont({
 
 export const metadata = {
   title: "Capstone: Simplify Your Learning Journey",
-  description: "Capstone is an all-in-one platform designed to help students organize their study materials effortlessly. Upload textbooks, take notes, and create flashcards in a user-friendly interface that streamlines your learning experience. With secure user authentication, interactive note-taking, and powerful flashcard creation tools, StudyHub empowers students to stay organized and focused on what truly matters: mastering their studies.",
+  description:
+    "Capstone is an all-in-one platform designed to help students organize their study materials effortlessly. Upload textbooks, take notes, and create flashcards in a user-friendly interface that streamlines your learning experience. With secure user authentication, interactive note-taking, and powerful flashcard creation tools, StudyHub empowers students to stay organized and focused on what truly matters: mastering their studies.",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-100`}
+        style={{ width: "100vw", overflowX: "hidden" }}
       >
-        {children}
+        <Navbar />
+        <main className="w-full">{children}</main>
       </body>
     </html>
   );
